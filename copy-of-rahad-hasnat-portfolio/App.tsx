@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -13,16 +12,32 @@ const App: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<VideoProject | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   
+  // Load data from LocalStorage first, if not available use constants.tsx
   const [profile, setProfile] = useState(() => {
     const saved = localStorage.getItem('rahad_profile');
-    return saved ? JSON.parse(saved) : PROFILE_DETAILS;
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return PROFILE_DETAILS;
+      }
+    }
+    return PROFILE_DETAILS;
   });
 
   const [videos, setVideos] = useState<VideoProject[]>(() => {
     const saved = localStorage.getItem('rahad_videos');
-    return saved ? JSON.parse(saved) : PORTFOLIO_DATA;
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return PORTFOLIO_DATA;
+      }
+    }
+    return PORTFOLIO_DATA;
   });
 
+  // Automatically save to local browser for instant preview
   useEffect(() => {
     localStorage.setItem('rahad_profile', JSON.stringify(profile));
   }, [profile]);
